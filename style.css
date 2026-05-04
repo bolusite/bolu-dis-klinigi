@@ -45,7 +45,7 @@ header {
   border-bottom: 1px solid #e5e7eb;
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 999;
 }
 
 .container {
@@ -54,11 +54,11 @@ header {
 }
 
 .nav {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 18px 0;
   gap: 24px;
+  padding: 18px 0;
 }
 
 .logo {
@@ -74,6 +74,7 @@ header {
 
 .menu {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 22px;
   font-size: 15px;
@@ -88,6 +89,44 @@ header {
 .menu a.active {
   color: #0f766e;
   font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-action {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+.header-action.whatsapp {
+  background: #25d366;
+}
+
+.header-action.phone {
+  background: #0f766e;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d1fae5;
+  border-radius: 12px;
+  background: #f0fdfa;
+  color: #0f766e;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .hero,
@@ -387,41 +426,6 @@ textarea {
   resize: vertical;
 }
 
-.floating-actions {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.floating-btn {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 700;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.26);
-  transition: 0.2s ease;
-}
-
-.floating-btn:hover {
-  transform: translateY(-3px);
-}
-
-.floating-btn.whatsapp {
-  background: #25d366;
-}
-
-.floating-btn.phone {
-  background: #0f766e;
-}
-
 footer {
   background: #111827;
   color: #d1d5db;
@@ -437,37 +441,64 @@ footer {
   }
 
   .nav {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 14px 0;
+    grid-template-columns: 1fr auto;
     gap: 12px;
+    padding: 14px 0;
   }
 
   .logo {
-    font-size: 21px;
+    font-size: 20px;
+  }
+
+  .header-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .header-action {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .mobile-menu-toggle {
+    display: grid;
+    place-items: center;
   }
 
   .menu {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-column: 1 / -1;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     gap: 8px;
-    font-size: 13px;
+    padding: 12px;
+    margin-top: 4px;
+    background: #f8fffd;
+    border: 1px solid #d1fae5;
+    border-radius: 18px;
+    box-shadow: 0 16px 34px rgba(15, 118, 110, 0.10);
+  }
+
+  .menu.open {
+    display: flex;
   }
 
   .menu a {
     display: block;
-    text-align: center;
-    background: #f0fdfa;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
     color: #0f766e;
-    padding: 9px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
   }
 
   .menu a.active {
     background: #0f766e;
     color: #ffffff;
+    border-color: #0f766e;
   }
 
   .hero {
@@ -513,33 +544,5 @@ footer {
 
   .page-hero h1 {
     font-size: 34px;
-  }
-
-  .floating-actions {
-    right: 16px;
-    bottom: 16px;
-    gap: 10px;
-  }
-
-  .floating-btn {
-    width: 52px;
-    height: 52px;
-    font-size: 22px;
-  }
-}
-
-@media (max-width: 430px) {
-  .menu {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .menu a {
-    font-size: 13px;
-    padding: 9px 6px;
-  }
-
-  .floating-actions {
-    right: 14px;
-    bottom: 14px;
   }
 }
