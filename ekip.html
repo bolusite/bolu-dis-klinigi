@@ -1,9 +1,68 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ekibimiz | Bolu Diş Kliniği</title><meta name="description" content="Bolu Diş Kliniği uzman hekim ekibi."><link rel="stylesheet" href="style.css"></head><body>
-<header><div class="container nav"><a href="index.html" class="logo">Bolu <span>Diş Kliniği</span></a><nav class="menu"><a href="index.html">Ana Sayfa</a><a href="hakkimizda.html">Hakkımızda</a><a href="tedaviler.html">Tedaviler</a><a class="active" href="ekip.html">Ekip</a><a href="blog.html">Blog</a><a href="iletisim.html">İletişim</a></nav></div></header>
-<main>
-<section class="page-hero"><div class="container"><h1>Ekibimiz</h1><p>Alanında deneyimli hekimlerimizle tedavi sürecinizi güvenli ve planlı şekilde yönetiyoruz.</p></div></section>
-<section><div class="container"><div class="cards"><div class="card team-card"><div class="team-photo">A</div><h3>Dt. Ayşe Yılmaz</h3><p>Estetik Diş Hekimliği</p></div><div class="card team-card"><div class="team-photo">M</div><h3>Dt. Mehmet Demir</h3><p>İmplantoloji</p></div><div class="card team-card"><div class="team-photo">E</div><h3>Dt. Ece Kaya</h3><p>Ortodonti</p></div></div></div></section>
-</main>
-<footer>© 2026 Bolu Diş Kliniği. Tüm hakları saklıdır.</footer>
-<div class="floating-actions"><a class="floating-btn whatsapp" href="https://wa.me/905321234567" target="_blank" aria-label="WhatsApp ile iletişime geç">✆</a><a class="floating-btn phone" href="tel:+903742221122" aria-label="Telefon ile ara">☎</a></div>
-</body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Ekibimiz | Bolu Diş Kliniği</title>
+  <meta name="description" content="Bolu Diş Kliniği uzman hekim ekibi.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="logo">Bolu <span>Diş Kliniği</span></a>
+
+      <nav class="menu" id="mobileMenu">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="hakkimizda.html">Hakkımızda</a>
+        <a href="tedaviler.html">Tedaviler</a>
+        <a class="active" href="ekip.html">Ekip</a>
+        <a href="blog.html">Blog</a>
+        <a href="iletisim.html">İletişim</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="header-action whatsapp" href="https://wa.me/905321234567" target="_blank" aria-label="WhatsApp ile iletişime geç">✆</a>
+        <a class="header-action phone" href="tel:+903742221122" aria-label="Telefon ile ara">☎</a>
+        <button class="mobile-menu-toggle" type="button" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="Menüyü aç veya kapat">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Ekibimiz</h1>
+        <p>Alanında deneyimli hekimlerimizle tedavi sürecinizi güvenli ve planlı şekilde yönetiyoruz.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="cards">
+          <div class="card team-card">
+            <div class="team-photo">A</div>
+            <h3>Dt. Ayşe Yılmaz</h3>
+            <p>Estetik Diş Hekimliği</p>
+          </div>
+
+          <div class="card team-card">
+            <div class="team-photo">M</div>
+            <h3>Dt. Mehmet Demir</h3>
+            <p>İmplantoloji</p>
+          </div>
+
+          <div class="card team-card">
+            <div class="team-photo">E</div>
+            <h3>Dt. Ece Kaya</h3>
+            <p>Ortodonti</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 Bolu Diş Kliniği. Tüm hakları saklıdır.</footer>
+</body>
+</html>
