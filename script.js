@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const oldCanvas = document.getElementById("waterWakeCanvas");
+
   if (oldCanvas) {
     oldCanvas.remove();
   }
@@ -22,10 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.width = "100vw";
   canvas.style.height = "100vh";
   canvas.style.pointerEvents = "none";
-  canvas.style.zIndex = "0";
-  canvas.style.opacity = "0.55";
+  canvas.style.zIndex = "2";
 
-  document.body.prepend(canvas);
+  document.body.appendChild(canvas);
 
   const ctx = canvas.getContext("2d");
 
@@ -35,10 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let mouseX = width / 2;
   let mouseY = height / 2;
-  let smoothX = mouseX;
-  let smoothY = mouseY;
+  let lastX = mouseX;
+  let lastY = mouseY;
 
-  let time = 0;
+  let trail = [];
+  let lastPointTime = 0;
 
   function resizeCanvas() {
     width = window.innerWidth;
@@ -47,6 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
+
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
@@ -57,94 +61,127 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("mousemove", function (event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
+
+    const now = performance.now();
+    const dx = mouseX - lastX;
+    const dy = mouseY - lastY;
+    const speed = Math.sqrt(dx * dx + dy * dy);
+
+    if (speed > 3 && now - lastPointTime > 28) {
+      const angle = Math.atan2(dy, dx);
+      const behindX = mouseX - Math.cos(angle) * 18;
+      const behindY = mouseY - Math.sin(angle) * 18;
+
+      trail.push({
+        x: behindX,
+        y: behindY,
+        angle: angle,
+        speed: Math.min(speed, 32),
+        age: 0,
+        life: 90
+      });
+
+      lastPointTime = now;
+    }
+
+    lastX = mouseX;
+    lastY = mouseY;
   });
 
-  function drawWaterSurface() {
-    ctx.clearRect(0, 0, width, height);
+  function drawWakePoint(point) {
+    const progress = point.age / point.life;
+    const alpha = 0.18 * (1 - progress);
+    const length = 18 + point.speed * 2.2 + progress * 34;
+    const spread = 5 + point.speed * 0.28 + progress * 16;
 
-    smoothX += (mouseX - smoothX) * 0.045;
-    smoothY += (mouseY - smoothY) * 0.045;
+    const backAngle = point.angle + Math.PI;
+    const leftAngle = backAngle - 0.28;
+    const rightAngle = backAngle + 0.28;
+
+    const startX = point.x;
+    const startY = point.y;
+
+    const leftX = startX + Math.cos(leftAngle) * length;
+    const leftY = startY + Math.sin(leftAngle) * length;
+    const rightX = startX + Math.cos(rightAngle) * length;
+    const rightY = startY + Math.sin(rightAngle) * length;
 
     const gradient = ctx.createRadialGradient(
-      smoothX,
-      smoothY,
-      20,
-      smoothX,
-      smoothY,
-      420
+      startX,
+      startY,
+      0,
+      startX,
+      startY,
+      length
     );
 
-    gradient.addColorStop(0, "rgba(45, 212, 191, 0.18)");
-    gradient.addColorStop(0.35, "rgba(15, 118, 110, 0.10)");
-    gradient.addColorStop(1, "rgba(15, 118, 110, 0)");
+    gradient.addColorStop(0, "rgba(59, 130, 246, " + alpha * 0.45 + ")");
+    gradient.addColorStop(0.45, "rgba(45, 212, 191, " + alpha * 0.22 + ")");
+    gradient.addColorStop(1, "rgba(59, 130, 246, 0)");
 
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
 
-    const lineCount = Math.ceil(height / 28);
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(
+      startX + Math.cos(backAngle - 0.16) * length * 0.45,
+      startY + Math.sin(backAngle - 0.16) * length * 0.45 - spread,
+      leftX,
+      leftY
+    );
+    ctx.quadraticCurveTo(
+      startX + Math.cos(backAngle) * length * 0.52,
+      startY + Math.sin(backAngle) * length * 0.52,
+      rightX,
+      rightY
+    );
+    ctx.quadraticCurveTo(
+      startX + Math.cos(backAngle + 0.16) * length * 0.45,
+      startY + Math.sin(backAngle + 0.16) * length * 0.45 + spread,
+      startX,
+      startY
+    );
+    ctx.closePath();
+    ctx.fill();
 
-    for (let i = 0; i < lineCount; i++) {
-      const baseY = i * 28;
-      const distanceFromMouse = Math.abs(baseY - smoothY);
-      const mouseInfluence = Math.max(0, 1 - distanceFromMouse / 260);
+    ctx.strokeStyle = "rgba(37, 99, 235, " + alpha * 0.38 + ")";
+    ctx.lineWidth = 0.7;
 
-      ctx.beginPath();
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(
+      startX + Math.cos(backAngle - 0.2) * length * 0.55,
+      startY + Math.sin(backAngle - 0.2) * length * 0.55,
+      leftX,
+      leftY
+    );
+    ctx.stroke();
 
-      for (let x = -80; x <= width + 80; x += 18) {
-        const distanceX = x - smoothX;
-        const influence = Math.max(0, 1 - Math.abs(distanceX) / 360) * mouseInfluence;
-
-        const naturalWave =
-          Math.sin(x * 0.012 + time * 0.018 + i * 0.8) * 5 +
-          Math.sin(x * 0.026 + time * 0.011 + i * 1.3) * 2.5;
-
-        const mouseWave =
-          Math.sin(distanceX * 0.045 - time * 0.055) * 14 * influence;
-
-        const y = baseY + naturalWave + mouseWave;
-
-        if (x === -80) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-      }
-
-      const alpha = 0.045 + mouseInfluence * 0.08;
-      ctx.strokeStyle = "rgba(15, 118, 110, " + alpha + ")";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    for (let i = 0; i < 9; i++) {
-      const radius = 45 + i * 34 + Math.sin(time * 0.018 + i) * 8;
-      const alpha = Math.max(0, 0.09 - i * 0.008);
-
-      ctx.beginPath();
-
-      for (let a = 0; a <= Math.PI * 2 + 0.1; a += 0.12) {
-        const distortion =
-          Math.sin(a * 5 + time * 0.025 + i) * 7 +
-          Math.sin(a * 9 - time * 0.018) * 3;
-
-        const x = smoothX + Math.cos(a) * (radius + distortion);
-        const y = smoothY + Math.sin(a) * (radius * 0.55 + distortion * 0.45);
-
-        if (a === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-      }
-
-      ctx.strokeStyle = "rgba(45, 212, 191, " + alpha + ")";
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-    }
-
-    time += 1;
-    requestAnimationFrame(drawWaterSurface);
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(
+      startX + Math.cos(backAngle + 0.2) * length * 0.55,
+      startY + Math.sin(backAngle + 0.2) * length * 0.55,
+      rightX,
+      rightY
+    );
+    ctx.stroke();
   }
 
-  drawWaterSurface();
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    trail.forEach(function (point) {
+      point.age += 1;
+      drawWakePoint(point);
+    });
+
+    trail = trail.filter(function (point) {
+      return point.age < point.life;
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 });
