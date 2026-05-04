@@ -9,88 +9,167 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const canvas = document.createElement("canvas");
-  canvas.id = "waterRippleCanvas";
+  canvas.id = "waterWakeCanvas";
 
   canvas.style.position = "fixed";
-  canvas.style.top = "0";
-  canvas.style.left = "0";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
+  canvas.style.inset = "0";
+  canvas.style.width = "100vw";
+  canvas.style.height = "100vh";
   canvas.style.pointerEvents = "none";
-  canvas.style.zIndex = "0";
-  canvas.style.opacity = "0.9";
+  canvas.style.zIndex = "20";
+  canvas.style.opacity = "0.65";
 
-  document.body.prepend(canvas);
+  document.body.appendChild(canvas);
 
-  const context = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d");
 
-  let width;
-  let height;
-  let ripples = [];
-  let lastRippleTime = 0;
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  let dpr = window.devicePixelRatio || 1;
+
+  let mouseX = width / 2;
+  let mouseY = height / 2;
+  let lastX = mouseX;
+  let lastY = mouseY;
+
+  let smoothX = mouseX;
+  let smoothY = mouseY;
+
+  let wakes = [];
+  let lastCreateTime = 0;
 
   function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
+    dpr = window.devicePixelRatio || 1;
 
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
 
-    context.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
-  function createRipple(x, y) {
-    ripples.push({
-      x: x,
-      y: y,
-      radius: 0,
-      maxRadius: 90 + Math.random() * 40,
-      opacity: 0.32,
-      lineWidth: 1.3
-    });
-  }
-
   document.addEventListener("mousemove", function (event) {
-    const now = Date.now();
-
-    if (now - lastRippleTime > 45) {
-      createRipple(event.clientX, event.clientY);
-      lastRippleTime = now;
-    }
+    mouseX = event.clientX;
+    mouseY = event.clientY;
   });
 
-  function animateRipples() {
-    context.clearRect(0, 0, width, height);
+  function createWake(x, y, dx, dy) {
+    const speed = Math.sqrt(dx * dx + dy * dy);
 
-    ripples.forEach(function (ripple, index) {
-      ripple.radius += 1.8;
-      ripple.opacity -= 0.006;
-      ripple.lineWidth += 0.01;
+    if (speed < 1.5) return;
 
-      context.beginPath();
-      context.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+    const length = Math.min(130, Math.max(55, speed * 4.5));
+    const spread = Math.min(42, Math.max(18, speed * 1.4));
 
-      context.strokeStyle = "rgba(15, 118, 110, " + ripple.opacity + ")";
-      context.lineWidth = ripple.lineWidth;
-      context.stroke();
+    const angle = Math.atan2(dy, dx);
 
-      context.beginPath();
-      context.arc(ripple.x, ripple.y, ripple.radius * 0.55, 0, Math.PI * 2);
+    const backAngle = angle + Math.PI;
 
-      context.strokeStyle = "rgba(45, 212, 191, " + ripple.opacity * 0.55 + ")";
-      context.lineWidth = 0.8;
-      context.stroke();
+    const leftAngle = backAngle - 0.42;
+    const rightAngle = backAngle + 0.42;
 
-      if (ripple.opacity <= 0 || ripple.radius > ripple.maxRadius) {
-        ripples.splice(index, 1);
-      }
+    wakes.push({
+      x: x,
+      y: y,
+      leftX: x + Math.cos(leftAngle) * length,
+      leftY: y + Math.sin(leftAngle) * length + spread,
+      rightX: x + Math.cos(rightAngle) * length,
+      rightY: y + Math.sin(rightAngle) * length + spread,
+      midX: x + Math.cos(backAngle) * length * 0.55,
+      midY: y + Math.sin(backAngle) * length * 0.55 + spread * 0.5,
+      age: 0,
+      life: 95,
+      alpha: 0.28,
+      width: 1.1
     });
-
-    requestAnimationFrame(animateRipples);
   }
 
-  animateRipples();
+  function drawWake(wake) {
+    const progress = wake.age / wake.life;
+    const alpha = wake.alpha * (1 - progress);
+    const lift = progress * 22;
+
+    ctx.save();
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    ctx.strokeStyle = "rgba(15, 118, 110, " + alpha + ")";
+    ctx.lineWidth = wake.width + progress * 1.2;
+
+    ctx.beginPath();
+    ctx.moveTo(wake.x, wake.y);
+    ctx.quadraticCurveTo(
+      wake.midX - 14,
+      wake.midY - lift,
+      wake.leftX,
+      wake.leftY - lift
+    );
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(wake.x, wake.y);
+    ctx.quadraticCurveTo(
+      wake.midX + 14,
+      wake.midY - lift,
+      wake.rightX,
+      wake.rightY - lift
+    );
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(45, 212, 191, " + alpha * 0.55 + ")";
+    ctx.lineWidth = 0.7;
+
+    ctx.beginPath();
+    ctx.moveTo(wake.x, wake.y + 4);
+    ctx.quadraticCurveTo(
+      wake.midX,
+      wake.midY + 8 - lift,
+      wake.x + (wake.midX - wake.x) * 1.15,
+      wake.y + (wake.midY - wake.y) * 1.15 - lift
+    );
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    smoothX += (mouseX - smoothX) * 0.12;
+    smoothY += (mouseY - smoothY) * 0.12;
+
+    const dx = smoothX - lastX;
+    const dy = smoothY - lastY;
+
+    const now = performance.now();
+
+    if (now - lastCreateTime > 70) {
+      createWake(smoothX, smoothY, dx, dy);
+      lastCreateTime = now;
+    }
+
+    lastX = smoothX;
+    lastY = smoothY;
+
+    wakes.forEach(function (wake) {
+      wake.age += 1;
+      drawWake(wake);
+    });
+
+    wakes = wakes.filter(function (wake) {
+      return wake.age < wake.life;
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 });
