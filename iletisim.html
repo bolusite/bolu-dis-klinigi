@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>İletişim | Bolu Diş Kliniği</title>
+  <meta name="description" content="Bolu Diş Kliniği iletişim ve randevu bilgileri." />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo">Bolu <span>Diş Kliniği</span></a>
+
+    <nav class="menu">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="hakkimizda.html">Hakkımızda</a>
+      <a href="tedaviler.html">Tedaviler</a>
+      <a href="ekip.html">Ekip</a>
+      <a href="blog.html">Blog</a>
+      <a class="active" href="iletisim.html">İletişim</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <h1>İletişim</h1>
+      <p>Randevu talebiniz için formu doldurabilir veya telefon üzerinden bizimle iletişime geçebilirsiniz.</p>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="container contact-grid">
+      <div class="contact-box">
+        <h3>İletişim Bilgileri</h3>
+        <p><strong>Telefon:</strong> 0374 000 00 00</p>
+        <p><strong>WhatsApp:</strong> 05xx xxx xx xx</p>
+        <p><strong>E-posta:</strong> info@boludisklinigi.com</p>
+        <p><strong>Adres:</strong> Merkez, Bolu</p>
+        <p><strong>Çalışma Saatleri:</strong> Pazartesi - Cumartesi / 09:00 - 18:00</p>
+      </div>
+
+      <div class="contact-box">
+        <h3>Randevu Formu</h3>
+
+        <form>
+          <input type="text" placeholder="Ad Soyad" required />
+          <input type="tel" placeholder="Telefon" required />
+          <select required>
+            <option value="">Tedavi Alanı Seçiniz</option>
+            <option>İmplant</option>
+            <option>Ortodonti</option>
+            <option>Diş Beyazlatma</option>
+            <option>Kanal Tedavisi</option>
+            <option>Genel Muayene</option>
+          </select>
+          <textarea placeholder="Mesajınız"></textarea>
+          <button class="btn btn-primary" type="submit">Randevu Talebi Gönder</button>
+        </form>
+
+        <p style="font-size: 13px; margin-top: 12px;">
+          Not: Bu örnek form henüz veri göndermez. Sonraki aşamada form altyapısı eklenmelidir.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2026 Bolu Diş Kliniği. Tüm hakları saklıdır.
+</footer>
+
+</body>
+</html>
