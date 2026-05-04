@@ -1,9 +1,63 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tedaviler | Bolu Diş Kliniği</title><meta name="description" content="Bolu Diş Kliniği tedavi alanları."><link rel="stylesheet" href="style.css"></head><body>
-<header><div class="container nav"><a href="index.html" class="logo">Bolu <span>Diş Kliniği</span></a><nav class="menu"><a href="index.html">Ana Sayfa</a><a href="hakkimizda.html">Hakkımızda</a><a class="active" href="tedaviler.html">Tedaviler</a><a href="ekip.html">Ekip</a><a href="blog.html">Blog</a><a href="iletisim.html">İletişim</a></nav></div></header>
-<main>
-<section class="page-hero"><div class="container"><h1>Tedaviler</h1><p>Ağız ve diş sağlığınız için ihtiyaçlarınıza uygun tedavi süreçleri sunuyoruz.</p></div></section>
-<section><div class="container"><div class="cards"><div class="card"><h3>İmplant Tedavisi</h3><p>Eksik dişlerin fonksiyonel ve estetik şekilde tamamlanmasına yönelik modern tedavi seçeneğidir.</p></div><div class="card"><h3>Ortodonti</h3><p>Diş ve çene yapısındaki çapraşıklıkların düzeltilmesine yönelik kişiye özel tedavi planlamasıdır.</p></div><div class="card"><h3>Diş Beyazlatma</h3><p>Daha parlak ve estetik bir gülüş için uygulanan güvenli diş beyazlatma işlemleridir.</p></div><div class="card"><h3>Kanal Tedavisi</h3><p>Dişin korunmasını hedefleyen, enfekte dokuların temizlenmesine yönelik tedavi sürecidir.</p></div><div class="card"><h3>Çocuk Diş Hekimliği</h3><p>Çocukların ağız ve diş sağlığını korumaya yönelik hassas ve kontrollü yaklaşımdır.</p></div><div class="card"><h3>Estetik Diş Hekimliği</h3><p>Gülüş tasarımı, porselen lamina ve estetik restorasyon uygulamalarını kapsar.</p></div></div></div></section>
-</main>
-<footer>© 2026 Bolu Diş Kliniği. Tüm hakları saklıdır.</footer>
-<div class="floating-actions"><a class="floating-btn whatsapp" href="https://wa.me/905321234567" target="_blank" aria-label="WhatsApp ile iletişime geç">✆</a><a class="floating-btn phone" href="tel:+903742221122" aria-label="Telefon ile ara">☎</a></div>
-</body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Hakkımızda | Bolu Diş Kliniği</title>
+  <meta name="description" content="Bolu Diş Kliniği hakkında bilgi alın.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="logo">Bolu <span>Diş Kliniği</span></a>
+
+      <nav class="menu" id="mobileMenu">
+        <a href="index.html">Ana Sayfa</a>
+        <a class="active" href="hakkimizda.html">Hakkımızda</a>
+        <a href="tedaviler.html">Tedaviler</a>
+        <a href="ekip.html">Ekip</a>
+        <a href="blog.html">Blog</a>
+        <a href="iletisim.html">İletişim</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="header-action whatsapp" href="https://wa.me/905321234567" target="_blank" aria-label="WhatsApp ile iletişime geç">✆</a>
+        <a class="header-action phone" href="tel:+903742221122" aria-label="Telefon ile ara">☎</a>
+        <button class="mobile-menu-toggle" type="button" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="Menüyü aç veya kapat">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Hakkımızda</h1>
+        <p>Hasta memnuniyetini, güvenli tedavi süreçlerini ve modern diş hekimliği yaklaşımını merkeze alıyoruz.</p>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="container about-grid">
+        <div class="about-image"></div>
+
+        <div class="about-text">
+          <h2>Bolu Diş Kliniği</h2>
+          <p>Bolu Diş Kliniği, ağız ve diş sağlığı alanında modern, güvenilir ve hasta odaklı hizmet sunmak amacıyla kurulmuştur.</p>
+          <p>Tedavi süreçlerinde doğru tanı, kişiye özel planlama ve sürdürülebilir hasta memnuniyetini esas alıyoruz.</p>
+          <p>Kliniğimizde estetik diş hekimliği, implant, ortodonti, kanal tedavisi, çocuk diş hekimliği ve genel diş sağlığı hizmetleri sunulmaktadır.</p>
+
+          <div class="stats">
+            <div class="stat"><strong>10+</strong>Yıllık Deneyim</div>
+            <div class="stat"><strong>6</strong>Tedavi Alanı</div>
+            <div class="stat"><strong>1000+</strong>Hasta Deneyimi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 Bolu Diş Kliniği. Tüm hakları saklıdır.</footer>
+</body>
+</html>
